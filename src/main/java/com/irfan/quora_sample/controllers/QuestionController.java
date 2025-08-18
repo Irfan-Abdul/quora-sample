@@ -41,8 +41,8 @@ public class QuestionController {
 
     @GetMapping("/search")
     public Flux<QuestionResponseDTO> searchQuestions(@RequestParam String query,
-                                                     @RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(required = false) String lastId,
                                                      @RequestParam(defaultValue = "10") int size){
-        return questionService.searchQuestions(query,page,size);
+        return questionService.searchQuestions(query,lastId,size);
     }
 }

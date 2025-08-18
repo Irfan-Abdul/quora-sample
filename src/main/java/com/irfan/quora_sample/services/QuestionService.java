@@ -6,6 +6,11 @@ import com.irfan.quora_sample.dto.QuestionResponseDTO;
 import com.irfan.quora_sample.models.Questions;
 import com.irfan.quora_sample.repositories.QuestionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -41,8 +46,14 @@ public class QuestionService implements IQuestionService{
     }
 
     @Override
-    public Flux<QuestionResponseDTO> searchQuestions(String query, int page, int size) {
+    public Flux<QuestionResponseDTO> searchQuestions(String query, String lastId, int size) {
+        Pageable pageable= PageRequest.of(0,size);
+        if(lastId==null){
+            return questionRepository.findByTitleFirstPage(query,pageable);
+        }
+        else{
+            return questionRepository.findByTitleAfterId(query,lastId,pageable);
+        }
 
-        return questionRepository.findByTitleContaining (query).skip(page*size).take(size).map(QuestionAdapter::toQuestionResponseDTO);
     }
 }
