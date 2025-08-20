@@ -29,20 +29,23 @@ public class QuestionController {
         return questionService.findQuestionById(id);
     }
 
-    @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<QuestionResponseDTO> findAllQestions(){
-        return questionService.findAllQuestions();
+    @GetMapping(value = "/", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<QuestionResponseDTO> findAllQestions(@RequestParam(required = false)  String cursor,
+                                                     @RequestParam(defaultValue = "2") int size){
+        return questionService.findAllQuestions(cursor,size);
     }
+
+    @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 
     @DeleteMapping("/{id}")
     public Mono<Void> deleteQuestionByID(@PathVariable String id){
         return questionService.deleteQuestionById(id);
     }
 
-    @GetMapping("/search")
+    @GetMapping(value = "/search", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<QuestionResponseDTO> searchQuestions(@RequestParam String query,
-                                                     @RequestParam(required = false) String lastId,
+                                                     @RequestParam(required = false) String cursor,
                                                      @RequestParam(defaultValue = "10") int size){
-        return questionService.searchQuestions(query,lastId,size);
+        return questionService.searchQuestions(query,cursor,size);
     }
 }

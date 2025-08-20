@@ -1,11 +1,15 @@
 spring:
   application:
-    name: quora-sampe
+    name: quora-sample
   data:
     mongodb:
       host: localhost
       port: 27017
       database: Quora
       auto-index-creation: true
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.ReactiveMongoTemplate: DEBUG
 
 

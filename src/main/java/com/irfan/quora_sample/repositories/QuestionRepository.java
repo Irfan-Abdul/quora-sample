@@ -8,7 +8,9 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Scanner;
 
 @Repository
 public interface QuestionRepository extends ReactiveMongoRepository<Questions,String> {
@@ -18,6 +20,9 @@ public interface QuestionRepository extends ReactiveMongoRepository<Questions,St
     @Query("{'title':{$regex: ?0, $options: 'i'}}")
     Flux<QuestionResponseDTO> findByTitleFirstPage(String query, Pageable pageable);
 
-    @Query("{'title' :{$regex: ?0, $options: 'i'}, 'id' :{$gt: ?1}}")
-    Flux<QuestionResponseDTO> findByTitleAfterId(String query, String lastId, Pageable pageable);
+    @Query("{'title' :{$regex: ?0, $options: 'i'}, 'createdAt' :{$lt: ?1}}")
+    Flux<QuestionResponseDTO> findByTitleAfterId(String query, LocalDateTime cursor, Pageable pageable);
+
+
+    //Flux<Questions> findByLatest(org.springframework.data.mongodb.core.query.Query query, Class<Questions> questionsClass);
 }
